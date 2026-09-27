@@ -7,6 +7,9 @@ public sealed class Compte permits CompteCourant, CompteEpargne {
     private double solde ;
     private final int idClient ;
 
+    public Compte(int id, String numero, double solde, int idClient) {
+    }
+
     public int getId() {
         return id;
     }
