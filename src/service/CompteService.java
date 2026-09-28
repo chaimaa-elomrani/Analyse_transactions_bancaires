@@ -11,7 +11,7 @@ public class CompteService {
 
     private final CompteDAO compteDAO = new CompteDAO();
 
-    public void creerCompteCourant(String numero, double solde, int idClient, double decouvert) {
+    public void createAccCourant(String numero, double solde, int idClient, double decouvert) {
         CompteCourant compte = new CompteCourant(0, numero, solde, idClient, decouvert);
         compteDAO.create(compte);
     }
