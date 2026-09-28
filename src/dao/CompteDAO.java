@@ -5,6 +5,8 @@ import entity.CompteCourant;
 import entity.CompteEpargne;
 import utils.DatabaseConnection;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompteDAO {
 
@@ -66,5 +68,37 @@ public class CompteDAO {
             System.out.println("Erreur : " + e.getMessage());
         }
         return null;
+    }
+
+    public List<Compte> findByClient(int idClient){
+        List<Compte> comptes = new ArrayList<>();
+        String sql = "SELECT * FROM compte WHERE id_client = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idClient);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String type = rs.getString("type_compte");
+                int compteId = rs.getInt("id");
+                String numero = rs.getString("numero");
+                double solde = rs.getDouble("solde");
+                int clientId = rs.getInt("id_client");
+
+                if ("COURANT".equals(type)) {
+                    double decouvert = rs.getDouble("decouvert_autorise");
+                    comptes.add(new CompteCourant(compteId, numero, solde, clientId, decouvert));
+                } else {
+                    double taux = rs.getDouble("taux_interet");
+                    comptes.add(new CompteEpargne(compteId, numero, solde, clientId, taux));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        }
+        return comptes;
     }
 }
