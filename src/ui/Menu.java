@@ -20,10 +20,10 @@ public class Menu {
             scanner.nextLine();
 
             switch (choix) {
-                case 1 -> clientService.addClient();
-                case 2 -> compteService.createAccCourant();
-                case 3 -> transactionService.addTransaction();
-                case 4 -> clientService.getAll();
+                case 1 -> ajouterClient();
+                case 2 -> creerCompte();
+                case 3 -> ajouterTransaction();
+                case 4 -> listerClients();
                 case 0 -> {
                     System.out.println("Au revoir !");
                     return;
