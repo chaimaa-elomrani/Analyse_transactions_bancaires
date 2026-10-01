@@ -57,4 +57,31 @@ public class TransactionDAO {
         }
         return transactions;
     }
+
+
+
+    public List<Transaction> findAll() {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT * FROM transaction";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Transaction t = new Transaction(
+                        rs.getInt("id"),
+                        rs.getTimestamp("date").toLocalDateTime(),
+                        rs.getDouble("montant"),
+                        TypeTransaction.valueOf(rs.getString("type")),
+                        rs.getString("lieu"),
+                        rs.getInt("idCompte")
+                );
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur findAll transactions : " + e.getMessage());
+        }
+        return list;
+    }
 }

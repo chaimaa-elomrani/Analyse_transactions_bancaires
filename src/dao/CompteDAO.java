@@ -101,4 +101,34 @@ public class CompteDAO {
         }
         return comptes;
     }
+
+
+    public List<Compte> findAll() {
+        List<Compte> list = new ArrayList<>();
+        String sql = "SELECT * FROM compte";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String numero = rs.getString("numero");
+                double solde = rs.getDouble("solde");
+                int idClient = rs.getInt("idClient");
+                String type = rs.getString("typeCompte");
+
+                if ("COURANT".equalsIgnoreCase(type)) {
+                    double decouvert = rs.getDouble("decouvert");
+                    list.add(new CompteCourant(id, numero, solde, idClient, decouvert));
+                } else {
+                    double taux = rs.getDouble("taux");
+                    list.add(new CompteEpargne(id, numero, solde, idClient, taux));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur findAll comptes : " + e.getMessage());
+        }
+        return list;
+    }
 }
